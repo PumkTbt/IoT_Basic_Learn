@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- Phần các tiêu đề của website -->
+    <head>
+        <meta charset="utf-8">
+        <meta name = "generator" content="FET-IUH Iot Team">
+        <meta name = "dcterms.created" content="T2, 25 Th4 2022 15:28:12 GMT">
+        <meta name = "description" content="Design Platform by IoT Lab">
+        <meta name = "keywords" content="Internet of Thing, LoraWan, Raspberry Pi 4">
+        <title> Led Controller Web </title>
+    </head>
+    
+    <body>
+        <h2 align = center> LED Controller Web </h2> 
+        <div align = center>
+            <p>
+                <font color="red"> <b> FET IoT Team </b></font><br />
+                <font color="blue"> Design Platform for IoT Lab </font> <br />
+            </p>
+
+            <p>
+                <!-- Phần nút nhấn chọn chế độ hệ thống -->
+                <font color="">Click on button chon che do</font> <br />
+                <button onclick="Manual()">Manual</button>
+                <button onclick="Auto()">Auto</button>
+                <br /><br />
+
+                <!-- Phần nút nhấn ON/OFF led -->
+                <font color="green">Click on button for control LED</font> <br />
+                <button onclick="LED_on()">OFF</button>
+                <button onclick="LED_off()">ON</button><br />  
+            </p>
+        </div>
+
+        <div align = center>
+            <!-- Tạo khung hiển thị biểu đồ thể hiện nhiệt độ - độ ẩm lấy từ thingspeak -->
+            <p>
+                <font  color="red">This is bieu do </font> <br/>
+                <iframe width="450" height="260" style="border: 1px solid #cccccc;"src="https://thingspeak.com/channels/1693595/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15">
+                </iframe> 
+                <iframe width="450" height="260" style="border: 1px solid #cccccc;"src="https://thingspeak.com/channels/1693595/charts/2?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15">
+                </iframe> 
+            </p>
+        </div> 
+        <script>
+            // Tạo link gửi dữ liệu mỗi lần nhấn nút lên server thingspeak
+            var url = "https://api.thingspeak.com/update?";
+            var params_on = "api_key=RC62JQJPACXKP9AE&field3=1";
+            var params_off = "api_key=RC62JQJPACXKP9AE&field3=0";
+
+            var params_manual = "api_key=RC62JQJPACXKP9AE&field4=1";
+            var params_auto = "api_key=RC62JQJPACXKP9AE&field4=0";
+            // Tạo ra một request để gửi dữ liệu lên server
+            var xhr = new XMLHttpRequest();
+            // Hàm khi nhấn nút ON: bật led
+            function LED_on(){
+                xhr.open("POST",url,true);
+                xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                xhr.send(params_on);
+            }
+            // Hàm khi nhấn nút OFF: tắt led
+            function LED_off(){
+                xhr.open("POST",url,true);
+                xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                xhr.send(params_off);
+            }
+            // Hàm khi nhấn nút Manual: chế độ điều khiển bằng nút nhấn ON/OFF
+            function Manual(){
+                xhr.open("POST",url,true);
+                xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                xhr.send(params_manual);
+            }
+            // Hàm khi nhấn nút Auto: chế độ sáng led tự động theo thời gian thực đã setup
+            function Auto(){
+                xhr.open("POST",url,true);
+                xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                xhr.send(params_auto);
+            }
+        </script>
+    </body>
+</html>
